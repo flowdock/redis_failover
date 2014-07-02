@@ -364,6 +364,12 @@ module RedisFailover
     # @return [Symbol] the verified role
     # @raise [InvalidNodeRoleError] if the role is invalid
     def verify_role!(node, role)
+      info = node.info
+      current_role = begin
+                       info[:role]
+                     rescue TypeError
+                       raise TypeError, info.inspect
+                     end
       current_role = node.info['role']
       if current_role.to_sym != role
         raise InvalidNodeRoleError.new(address_for(node), role, current_role)
