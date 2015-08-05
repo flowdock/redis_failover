@@ -202,15 +202,14 @@ module RedisFailover
     # @param [Hash<Node, NodeSnapshot>] snapshots the current set of snapshots
     # @param [Node] node the optional node to promote
     def promote_new_master(snapshots, node = nil)
-      delete_path(redis_nodes_path)
-      @master = nil
-
       # make a specific node or selected candidate the new master
       candidate = node || failover_strategy_candidate(snapshots)
 
       if candidate.nil?
         logger.error('Failed to promote a new master, no candidate available.')
       else
+        delete_path(redis_nodes_path)
+        @master = nil
         @slaves.delete(candidate)
         @unavailable.delete(candidate)
         redirect_slaves_to(candidate)
