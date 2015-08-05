@@ -282,7 +282,7 @@ module RedisFailover
       return if node_string.nil?
       host, port = node_string.split(':', 2)
       ip = IPAddr.new(host) rescue nil
-      host = Socket.gethostbyaddr(ip.hton) if ip
+      host = Socket.gethostbyaddr(ip.hton).first if ip
       Node.new(:host => host, :port => port, :password => @options[:password])
     end
 
@@ -634,7 +634,7 @@ module RedisFailover
       return if node_string.nil?
       host, port = node_string.split(':', 2)
       ip = IPAddr.new(host) rescue nil
-      host = Socket.gethostbyaddr(ip.hton) if ip
+      host = Socket.gethostbyaddr(ip.hton).first if ip
 
       Node.new(:host => host, :port => port, :password => @options[:password])
     end

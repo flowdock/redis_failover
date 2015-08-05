@@ -54,7 +54,7 @@ module RedisFailover
       return unless info[:role] == 'slave'
       host = info[:master_host]
       ip = IPAddr.new(host) rescue nil
-      host = Socket.gethostbyaddr(ip.hton) if ip
+      host = Socket.gethostbyaddr(ip.hton).first if ip
       Node.new(:host => host, :port => info[:master_port].to_i)
     end
 
