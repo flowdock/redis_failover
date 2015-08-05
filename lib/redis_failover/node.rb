@@ -52,7 +52,10 @@ module RedisFailover
     def current_master
       info = fetch_info
       return unless info[:role] == 'slave'
-      Node.new(:host => info[:master_host], :port => info[:master_port].to_i)
+      host = info[:master_host]
+      ip = IPAddr.new(host) rescue nil
+      host = Socket.gethostbyaddr(ip.hton) if ip
+      Node.new(:host => host, :port => info[:master_port].to_i)
     end
 
     # Waits until something interesting happens. If the connection
