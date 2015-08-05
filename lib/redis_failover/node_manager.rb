@@ -156,8 +156,9 @@ module RedisFailover
         node.make_slave!(@master)
         @slaves << node
       else
-        # no master exists, make this the new master
-        promote_new_master(snapshots, node)
+        @slaves << node
+        # no master exists, find a new one
+        promote_new_master(snapshots)
       end
 
       @unavailable.delete(node)
